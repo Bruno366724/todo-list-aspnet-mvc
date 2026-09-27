@@ -1,0 +1,19 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TodoListApp.ViewModels
+{
+    public class TareaCreateViewModel
+    {
+        [Required(ErrorMessage = "El título es obligatorio.")]
+        [StringLength(100, ErrorMessage = "El título no puede superar los 100 caracteres.")]
+        [Display(Name = "Título")]
+        public string Titulo { get; set; } = string.Empty;
+
+        [StringLength(500, ErrorMessage = "La descripción no puede superar los 500 caracteres.")]
+        [Display(Name = "Descripción")]
+        public string? Descripcion { get; set; }
+
+        [Display(Name = "Imagen")]
+        public IFormFile? Imagen { get; set; }
+    }
+}

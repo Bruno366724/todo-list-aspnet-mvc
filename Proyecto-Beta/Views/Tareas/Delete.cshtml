@@ -1,0 +1,43 @@
+﻿@model TodoListApp.Models.Tarea
+
+@{
+    ViewData["Title"] = "Eliminar tarea";
+}
+
+<h1 class="mb-4">Eliminar tarea</h1>
+
+<p class="text-danger">¿Estás seguro de que querés eliminar esta tarea? Esta acción no se puede deshacer.</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            @if (Model.ImagenDatos != null)
+            {
+                <img src="@Url.Action("Imagen", "Tareas", new { id = Model.Id })" class="card-img-top" alt="Imagen de @Model.Titulo" />
+            }
+            <div class="card-body">
+                <h3 class="card-title">@Model.Titulo</h3>
+                <p class="card-text">@Model.Descripcion</p>
+                <p class="text-muted small mb-0">
+                    Estado: @(Model.Completada ? "Completada" : "Pendiente")
+                </p>
+                <p class="text-muted small">
+                    Creada: @Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                    @if (Model.Completada && Model.FechaRealizacion != null)
+                    {
+                        <text> — Completada: @Model.FechaRealizacion.Value.ToString("dd/MM/yyyy HH:mm")</text>
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+    </form>
+</div>

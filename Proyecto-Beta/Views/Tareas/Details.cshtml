@@ -1,0 +1,22 @@
+﻿@model TodoListApp.Models.Tarea
+
+@{
+    ViewData["Title"] = "Detalle de la tarea";
+}
+
+<h1 class="mb-4">@Model.Titulo</h1>
+
+<div class="detalle-tarea">
+    @if (Model.ImagenDatos != null)
+    {
+        <img src="@Url.Action("Imagen", "Tareas", new { id = Model.Id })" alt="Imagen de @Model.Titulo" class="detalle-imagen" />
+    }
+    <p class="card-text">@Model.Descripcion</p>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Editar</a>
+    <a asp-action="Index" class="btn btn-outline-secondary">Volver al listado</a>
+</div>

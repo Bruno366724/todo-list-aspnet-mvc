@@ -1,0 +1,88 @@
+﻿@model TodoListApp.ViewModels.TareaCreateViewModel
+
+@{
+    ViewData["Title"] = "Nueva tarea";
+}
+
+<h1 class="mb-4">Nueva tarea</h1>
+
+<div class="row">
+    <div class="col-lg-5">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Titulo" class="form-label"></label>
+                <input asp-for="Titulo" class="form-control" id="inputTitulo" />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label"></label>
+                <textarea asp-for="Descripcion" class="form-control" rows="3" id="inputDescripcion"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Imagen" class="form-label"></label>
+                <input asp-for="Imagen" type="file" class="form-control" accept=".jpg,.jpeg,.png,.gif" id="inputImagen" />
+                <span asp-validation-for="Imagen" class="text-danger"></span>
+                <div class="form-text">Opcional. Formatos permitidos: jpg, jpeg, png, gif. Máximo 5 MB.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Crear tarea</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    </div>
+
+    <div class="col-lg-7">
+        <p class="text-muted small mb-2">VISTA PREVIA</p>
+        <div class="vista-previa">
+            <h2 id="previewTitulo" class="preview-titulo">Título de la tarea</h2>
+            <div class="detalle-tarea">
+                <img id="previewImagen" src="" alt="Vista previa de la imagen" class="detalle-imagen d-none" />
+                <p class="card-text" id="previewDescripcion">La descripción aparecerá acá a medida que la escribís.</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        const inputTitulo = document.getElementById('inputTitulo');
+        const inputDescripcion = document.getElementById('inputDescripcion');
+        const inputImagen = document.getElementById('inputImagen');
+        const previewTitulo = document.getElementById('previewTitulo');
+        const previewDescripcion = document.getElementById('previewDescripcion');
+        const previewImagen = document.getElementById('previewImagen');
+
+        inputTitulo.addEventListener('input', function () {
+            previewTitulo.textContent = this.value.trim() || 'Título de la tarea';
+        });
+
+        inputDescripcion.addEventListener('input', function () {
+            previewDescripcion.textContent = this.value.trim() || 'La descripción aparecerá acá a medida que la escribís.';
+        });
+
+        inputImagen.addEventListener('change', function () {
+            const archivo = this.files && this.files[0];
+
+            if (!archivo) {
+                previewImagen.src = '';
+                previewImagen.classList.add('d-none');
+                return;
+            }
+
+            const lector = new FileReader();
+            lector.onload = function (e) {
+                previewImagen.src = e.target.result;
+                previewImagen.classList.remove('d-none');
+            };
+            lector.readAsDataURL(archivo);
+        });
+    </script>
+}

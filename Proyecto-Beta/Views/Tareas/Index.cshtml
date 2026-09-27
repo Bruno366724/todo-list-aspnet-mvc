@@ -1,0 +1,194 @@
+﻿@model IEnumerable<TodoListApp.Models.Tarea>
+
+@{
+    ViewData["Title"] = "Mis Tareas";
+}
+
+<h1 class="mb-4">Mis Tareas</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">+ Nueva tarea</a>
+</p>
+
+<h3>Pendientes</h3>
+<div class="row" id="listaPendientes">
+    @foreach (var tarea in Model.Where(t => !t.Completada))
+    {
+        <div class="col-md-4 mb-3 tarea-item" data-id="@tarea.Id" data-fecha-creacion="@tarea.FechaCreacion.ToString("dd/MM/yyyy HH:mm")">
+            <div class="card h-100">
+                <img src="@Url.Action("Imagen", "Tareas", new { id = tarea.Id })" class="card-img-top imagen-tarea d-none" alt="Evidencia de @tarea.Titulo" style="max-height: 180px; object-fit: cover;" />
+                <div class="card-body position-relative">
+                    <h5 class="card-title">@tarea.Titulo</h5>
+                    <p class="card-text">@tarea.Descripcion</p>
+                    <p class="fecha-info text-muted small mb-0">Creada: @tarea.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a asp-action="Details" asp-route-id="@tarea.Id" class="btn btn-sm btn-outline-secondary">Ver</a>
+                    <a asp-action="Edit" asp-route-id="@tarea.Id" class="btn btn-sm btn-outline-primary btn-editar">Editar</a>
+                    <form class="d-inline form-completar" data-id="@tarea.Id">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-success">✓ Completar</button>
+                    </form>
+                    <form class="d-inline form-desmarcar d-none" data-id="@tarea.Id">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-warning">↺ Desmarcar</button>
+                    </form>
+                    <a asp-action="Delete" asp-route-id="@tarea.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<p class="text-muted @(Model.Any(t => !t.Completada) ? "d-none" : "")" id="msgSinPendientes">No hay tareas pendientes.</p>
+
+<hr class="my-4" />
+
+<h3>Completadas</h3>
+<div class="row" id="listaCompletadas">
+    @foreach (var tarea in Model.Where(t => t.Completada))
+    {
+        <div class="col-md-4 mb-3 tarea-item" data-id="@tarea.Id" data-fecha-creacion="@tarea.FechaCreacion.ToString("dd/MM/yyyy HH:mm")">
+            <div class="card h-100 border-success">
+                <img src="@Url.Action("Imagen", "Tareas", new { id = tarea.Id })" class="card-img-top imagen-tarea @(tarea.ImagenDatos != null ? "" : "d-none")" alt="Evidencia de @tarea.Titulo" style="max-height: 180px; object-fit: cover;" />
+                <div class="card-body position-relative">
+                    <h5 class="card-title text-decoration-line-through">@tarea.Titulo</h5>
+                    <p class="card-text">@tarea.Descripcion</p>
+                    <p class="fecha-info text-success small mb-0">Completada: @(tarea.FechaRealizacion?.ToString("dd/MM/yyyy HH:mm") ?? "-")</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a asp-action="Details" asp-route-id="@tarea.Id" class="btn btn-sm btn-outline-secondary">Ver</a>
+                    <a asp-action="Edit" asp-route-id="@tarea.Id" class="btn btn-sm btn-outline-primary btn-editar d-none">Editar</a>
+                    <form class="d-inline form-completar d-none" data-id="@tarea.Id">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-success">✓ Completar</button>
+                    </form>
+                    <form class="d-inline form-desmarcar" data-id="@tarea.Id">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-warning">↺ Desmarcar</button>
+                    </form>
+                    <a asp-action="Delete" asp-route-id="@tarea.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<p class="text-muted @(Model.Any(t => t.Completada) ? "d-none" : "")" id="msgSinCompletadas">Todavía no completaste ninguna tarea.</p>
+
+@section Scripts {
+    <script>
+        document.addEventListener('submit', async function (e) {
+            const form = e.target;
+            const esCompletar = form.matches('.form-completar');
+            const esDesmarcar = form.matches('.form-desmarcar');
+
+            if (!esCompletar && !esDesmarcar) return;
+
+            e.preventDefault();
+
+            const id = form.dataset.id;
+            const token = form.querySelector('input[name="__RequestVerificationToken"]').value;
+            const cardCol = form.closest('.tarea-item');
+            const boton = form.querySelector('button');
+            boton.disabled = true;
+
+            try {
+                const url = esCompletar ? `/Tareas/MarcarCompletada/${id}` : `/Tareas/DesmarcarCompletada/${id}`;
+                const respuesta = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `__RequestVerificationToken=${encodeURIComponent(token)}`
+                });
+
+                if (!respuesta.ok) throw new Error('Error del servidor');
+
+                const datos = esCompletar ? await respuesta.json() : null;
+
+                await animarYMoverTarea(cardCol, esCompletar, datos);
+            } catch (error) {
+                console.error(error);
+                boton.disabled = false;
+                alert('Ocurrió un error, probá de nuevo.');
+            }
+        });
+
+        function esperar(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function animarYMoverTarea(cardCol, completando, datos) {
+            const card = cardCol.querySelector('.card');
+            const cardBody = cardCol.querySelector('.card-body');
+
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay-estado';
+            overlay.innerHTML = completando
+                ? '<svg viewBox="0 0 52 52" class="icono-check"><circle class="check-circulo" cx="26" cy="26" r="24" fill="none"/><path class="check-tilde" fill="none" d="M14 27l7 7 16-16"/></svg>'
+                : '<div class="icono-undo">↺</div>';
+            cardBody.appendChild(overlay);
+            card.classList.add('tarea-en-transicion');
+
+            await esperar(1000);
+
+            overlay.remove();
+            card.classList.remove('tarea-en-transicion');
+
+            const titulo = cardCol.querySelector('.card-title');
+            const imagen = cardCol.querySelector('.imagen-tarea');
+            const fechaInfo = cardCol.querySelector('.fecha-info');
+            const btnEditar = cardCol.querySelector('.btn-editar');
+            const formCompletar = cardCol.querySelector('.form-completar');
+            const formDesmarcar = cardCol.querySelector('.form-desmarcar');
+
+            if (completando) {
+                card.classList.add('border-success');
+                titulo.classList.add('text-decoration-line-through');
+                if (imagen.getAttribute('src')) imagen.classList.remove('d-none');
+                fechaInfo.textContent = `Completada: ${datos.fechaRealizacion}`;
+                fechaInfo.classList.replace('text-muted', 'text-success');
+                btnEditar.classList.add('d-none');
+                formCompletar.classList.add('d-none');
+                formDesmarcar.classList.remove('d-none');
+                formDesmarcar.querySelector('button').disabled = false;
+            } else {
+                card.classList.remove('border-success');
+                titulo.classList.remove('text-decoration-line-through');
+                imagen.classList.add('d-none');
+                fechaInfo.textContent = `Creada: ${cardCol.dataset.fechaCreacion}`;
+                fechaInfo.classList.replace('text-success', 'text-muted');
+                btnEditar.classList.remove('d-none');
+                formDesmarcar.classList.add('d-none');
+                formCompletar.classList.remove('d-none');
+                formCompletar.querySelector('button').disabled = false;
+            }
+
+            cardCol.classList.add('tarea-saliendo');
+            await esperar(400);
+
+            const destino = completando ? document.getElementById('listaCompletadas') : document.getElementById('listaPendientes');
+            cardCol.classList.add('sin-transicion');
+            destino.prepend(cardCol);
+            cardCol.classList.remove('tarea-saliendo');
+            cardCol.classList.add('tarea-entrando');
+            void cardCol.offsetWidth;
+            cardCol.classList.remove('sin-transicion');
+            cardCol.classList.remove('tarea-entrando');
+
+            actualizarMensajesVacios();
+        }
+
+        function actualizarMensajesVacios() {
+            const msgPendientes = document.getElementById('msgSinPendientes');
+            const msgCompletadas = document.getElementById('msgSinCompletadas');
+            const listaPendientes = document.getElementById('listaPendientes');
+            const listaCompletadas = document.getElementById('listaCompletadas');
+
+            msgPendientes.classList.toggle('d-none', listaPendientes.children.length > 0);
+            msgCompletadas.classList.toggle('d-none', listaCompletadas.children.length > 0);
+        }
+    </script>
+}

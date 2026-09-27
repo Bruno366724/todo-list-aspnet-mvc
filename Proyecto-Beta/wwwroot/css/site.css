@@ -1,0 +1,387 @@
+/* ==========================================
+   TodoListApp - Estilo "callejero granate oscuro"
+   ========================================== */
+
+:root {
+    --color-primario: #e0455a;
+    --color-primario-oscuro: #b8323f;
+    --color-acento: #ff5c6a;
+    --color-magenta: #d9538a;
+    --color-exito: #5fbf7a;
+    --color-peligro: #ff5c5c;
+    --color-fondo: #17090c;
+    --color-superficie: #2a1216;
+    --color-superficie-alta: #35171b;
+    --color-texto: #f5e6e8;
+    --color-texto-suave: #b58e93;
+    --sombra-suave: 0 2px 12px rgba(0, 0, 0, 0.4);
+    --sombra-hover: 0 8px 28px rgba(224, 69, 90, 0.35);
+    --radio-borde: 12px;
+}
+
+body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: "Poppins", system-ui, -apple-system, sans-serif;
+}
+
+/* Encabezados con estilo "callejero" */
+h1 {
+    font-family: "Permanent Marker", cursive;
+    color: var(--color-primario);
+    letter-spacing: 0.02em;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+h3 {
+    font-family: "Permanent Marker", cursive;
+    color: var(--color-magenta);
+    font-size: 1.3rem;
+    letter-spacing: 0.03em;
+    text-transform: none;
+}
+
+.card-title {
+    font-family: "Permanent Marker", cursive;
+    font-weight: 400;
+    color: var(--color-texto);
+    font-size: 1.25rem;
+}
+
+/* Tarjetas */
+.card {
+    background-color: var(--color-superficie);
+    color: var(--color-texto);
+    border: none;
+    border-radius: var(--radio-borde);
+    box-shadow: var(--sombra-suave);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    overflow: hidden;
+    border-left: 5px solid var(--color-acento);
+}
+
+    .card:hover {
+        transform: translateY(-3px) rotate(-0.3deg);
+        box-shadow: var(--sombra-hover);
+    }
+
+    .card.border-success {
+        border-left: 5px solid var(--color-exito) !important;
+    }
+
+    .card.border-danger {
+        border-left: 5px solid var(--color-peligro) !important;
+    }
+
+.card-text {
+    color: var(--color-texto-suave);
+}
+
+.card-img-top {
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-footer {
+    background-color: var(--color-superficie-alta);
+    border-top: 1px dashed #4a2226;
+    padding: 0.75rem 1rem;
+}
+
+.text-muted {
+    color: var(--color-texto-suave) !important;
+}
+
+/* Botones */
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0.45rem 1rem;
+    transition: all 0.15s ease;
+}
+
+.btn-primary {
+    background-color: var(--color-primario);
+    border-color: var(--color-primario);
+    color: #1a0a0c;
+}
+
+    .btn-primary:hover {
+        background-color: var(--color-primario-oscuro);
+        border-color: var(--color-primario-oscuro);
+        color: #f5e6e8;
+        transform: scale(1.03);
+    }
+
+.btn-success {
+    background-color: var(--color-exito);
+    border-color: var(--color-exito);
+}
+
+.btn-danger,
+.btn-outline-danger:hover {
+    background-color: var(--color-peligro);
+    border-color: var(--color-peligro);
+    color: #1a0a0c;
+}
+
+.btn-outline-danger {
+    color: var(--color-peligro);
+    border-color: var(--color-peligro);
+}
+
+.btn-outline-secondary {
+    color: var(--color-texto-suave);
+    border-color: var(--color-texto-suave);
+}
+
+    .btn-outline-secondary:hover {
+        background-color: var(--color-superficie-alta);
+        color: var(--color-texto);
+        border-color: var(--color-texto-suave);
+    }
+
+.btn-outline-primary {
+    color: var(--color-primario);
+    border-color: var(--color-primario);
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--color-primario);
+        color: #1a0a0c;
+    }
+
+.btn-sm {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.7rem;
+}
+
+/* Formularios */
+.form-control {
+    background-color: var(--color-superficie-alta);
+    border: 1px solid #4a2226;
+    color: var(--color-texto);
+    border-radius: 8px;
+    padding: 0.55rem 0.8rem;
+}
+
+    .form-control:focus {
+        background-color: var(--color-superficie-alta);
+        color: var(--color-texto);
+        border-color: var(--color-primario);
+        box-shadow: 0 0 0 3px rgba(224, 69, 90, 0.25);
+    }
+
+    .form-control::placeholder {
+        color: var(--color-texto-suave);
+    }
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-texto);
+}
+
+.form-text {
+    color: var(--color-texto-suave);
+    font-size: 0.8rem;
+}
+
+/* Texto tachado para tareas completadas */
+.text-decoration-line-through {
+    color: var(--color-texto-suave);
+}
+
+/* Miniaturas de imagen */
+.img-thumbnail {
+    background-color: var(--color-superficie-alta);
+    border-radius: 8px;
+    border: 1px solid #4a2226;
+}
+
+hr {
+    border-color: #4a2226;
+    opacity: 1;
+}
+
+/* Header / Navbar */
+.bg-header {
+    background-color: var(--color-superficie) !important;
+    border-bottom: 1px solid #4a2226 !important;
+}
+
+.navbar-brand {
+    font-family: "Permanent Marker", cursive;
+    color: var(--color-primario) !important;
+    font-size: 1.4rem;
+}
+
+    .navbar-brand:hover {
+        color: var(--color-acento) !important;
+    }
+
+.navbar .nav-link {
+    color: var(--color-texto) !important;
+}
+
+    .navbar .nav-link:hover {
+        color: var(--color-primario) !important;
+    }
+
+footer {
+    background-color: var(--color-superficie) !important;
+    color: var(--color-texto-suave) !important;
+    border-top: 1px solid #4a2226;
+}
+
+    footer a {
+        color: var(--color-primario) !important;
+    }
+
+/* Layout tipo "revista" para Details */
+.detalle-tarea {
+    overflow: hidden; /* contiene el float para que no rompa el layout */
+}
+
+.detalle-imagen {
+    float: left;
+    width: 320px;
+    max-width: 45%;
+    height: auto;
+    border-radius: var(--radio-borde);
+    margin: 0 1.5rem 1rem 0;
+    box-shadow: var(--sombra-suave);
+}
+
+.detalle-tarea .card-text {
+    color: var(--color-texto-suave);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+.clearfix {
+    clear: both;
+}
+
+/* En pantallas chicas, apilar en vez de flotar */
+@media (max-width: 576px) {
+    .detalle-imagen {
+        float: none;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 1rem 0;
+    }
+}
+
+/* Vista previa en Create/Edit */
+.vista-previa {
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-borde);
+    padding: 1.5rem;
+    box-shadow: var(--sombra-suave);
+}
+
+.preview-titulo {
+    font-family: "Permanent Marker", cursive;
+    color: var(--color-primario);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+/* Respetar los saltos de línea (Enter) en la descripción */
+.card-text {
+    white-space: pre-line;
+}
+
+/* Animación de completar/desmarcar tareas */
+.tarea-item {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+    .tarea-item.sin-transicion {
+        transition: none !important;
+    }
+
+    .tarea-item.tarea-saliendo {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+
+    .tarea-item.tarea-entrando {
+        opacity: 0;
+        transform: translateY(-16px);
+    }
+
+.overlay-estado {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: inherit;
+    z-index: 5;
+}
+
+.icono-check {
+    width: 70px;
+    height: 70px;
+}
+
+.check-circulo {
+    stroke: var(--color-exito);
+    stroke-width: 3;
+    stroke-dasharray: 151;
+    stroke-dashoffset: 151;
+    animation: dibujarCirculo 0.5s ease forwards;
+}
+
+.check-tilde {
+    stroke: var(--color-exito);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 36;
+    stroke-dashoffset: 36;
+    animation: dibujarTilde 0.4s ease forwards 0.4s;
+}
+
+@keyframes dibujarCirculo {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes dibujarTilde {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.icono-undo {
+    font-size: 3rem;
+    color: var(--color-acento);
+    animation: girarUndo 0.8s ease;
+}
+
+@keyframes girarUndo {
+    0% {
+        transform: rotate(0deg) scale(0.5);
+        opacity: 0;
+    }
+
+    60% {
+        transform: rotate(-300deg) scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: rotate(-360deg) scale(1);
+        opacity: 1;
+    }
+}
+
+.tarea-en-transicion .card-body > *:not(.overlay-estado) {
+    opacity: 0.15;
+    transition: opacity 0.3s ease;
+}
